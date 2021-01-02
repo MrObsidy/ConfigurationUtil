@@ -3,7 +3,7 @@ package configurationutil.io;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 
-import configurationutil.type.Configuration;
+import configurationutil.type.Table;
 
 public class Unserializer {
 	
@@ -81,11 +81,11 @@ public class Unserializer {
 		return segments.toArray(new String[segments.size()]); //not sure if this does anything, however it makes me rest easier
 	}
 	
-	public static Configuration unserializeConfiguration(String string) {
+	public static Table unserialize(String string) {
 		//System.out.println("Fired");
 		//System.out.println(string);
 		
-		Configuration config = new Configuration(getKey(string));
+		Table config = new Table(getKey(string));
 		
 		//System.out.println(string);
 		
@@ -104,7 +104,7 @@ public class Unserializer {
 		for(String segment : segments) {
 			//System.out.println("SEGMENT");
 			//System.out.println(segment + "\n");
-			config.addSubConfiguration(unserializeConfiguration(segment));
+			config.addSubTable(unserialize(segment));
 		}
 		
 		return config;

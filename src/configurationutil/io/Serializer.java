@@ -2,7 +2,7 @@ package configurationutil.io;
 
 import java.util.ArrayList;
 
-import configurationutil.type.Configuration;
+import configurationutil.type.Table;
 
 public class Serializer {
 	
@@ -18,15 +18,15 @@ public class Serializer {
 		return tabs;
 	}
 	
-	public static String serialize(Configuration config, int tabs) {
+	public static String serialize(Table config, int tabs) {
 		String serialized = generateTabs(tabs) + "['" + config.getKey() + "'] : ";
 		
 		if(config.hasValue()) {
 			serialized = serialized + "'" + config.getValue() + "';\n";
 		} else {
 			serialized = serialized + "{ \n";
-			ArrayList<Configuration> subConfigs = config.getSubConfigurations();
-			for (Configuration subConfig : subConfigs) {
+			ArrayList<Table> subConfigs = config.getSubConfigurations();
+			for (Table subConfig : subConfigs) {
 				serialized = serialized + Serializer.serialize(subConfig, tabs + 1);
 			}
 			serialized = serialized + generateTabs(tabs) + "}; \n";
