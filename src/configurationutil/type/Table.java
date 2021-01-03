@@ -38,11 +38,22 @@ public class Table {
 		return this.value;
 	}
 	
-	public ArrayList<Table> getSubConfigurations() {
+	/**
+	 * Returns a list of all subtables.
+	 * 
+	 * @return
+	 */
+	public ArrayList<Table> getSubTables() {
 		return this.subTables;
 	}
 	
-	public Table getSubConfiguration(String key) {
+	/**
+	 * Returns the subtable with the key key. If none exists, it returns null.
+	 * 
+	 * @param key
+	 * @return
+	 */
+	public Table getSubTable(String key) {
 		for(Table table : this.subTables) {
 			if(table.getKey().equals(key)) return table;
 		}
@@ -67,11 +78,47 @@ public class Table {
 		this.subTables.add(par);
 	}
 	
+	/**
+	 * Removes the subtable table from this table.
+	 * 
+	 * @param table
+	 */
+	public void removeSubTable(Table table) {
+		this.subTables.remove(table);
+	}
+	
+	/**
+	 * Removes the subtable with the key key from this table.
+	 * 
+	 * @param key
+	 */
+	public void removeSubTable(String key) {
+		Table toRemove = null;
+		for(Table table : this.subTables) {
+			if(table.getKey().equals(key)) {
+				toRemove = table;
+			}
+		}
+		
+		if(toRemove != null) {
+			this.subTables.remove(toRemove);
+		}
+	}
+
+	/**
+	 * Acts the same as Table.serialize() (Implicitly calls Serializer.serialize(this, 0)). See also: Object.toString()
+	 * 
+	 */
 	@Override
 	public String toString() {
 		return Serializer.serialize(this, 0);
 	}
 	
+	/**
+	 * Returns a string representation of this table that can be re-read into a table object.
+	 * 
+	 * @return
+	 */
 	public String serialize() {
 		return Serializer.serialize(this, 0);
 	}
