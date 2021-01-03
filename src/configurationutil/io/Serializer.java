@@ -25,7 +25,7 @@ public class Serializer {
 			serialized = serialized + "'" + config.getValue() + "';\n";
 		} else {
 			serialized = serialized + "{ \n";
-			ArrayList<Table> subConfigs = config.getSubConfigurations();
+			ArrayList<Table> subConfigs = config.getSubTables();
 			for (Table subConfig : subConfigs) {
 				serialized = serialized + Serializer.serialize(subConfig, tabs + 1);
 			}
