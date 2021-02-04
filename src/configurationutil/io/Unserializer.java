@@ -30,11 +30,25 @@ public class Unserializer {
 		
 		String truncated = "";
 		
-		truncated = input.split(Pattern.quote(": {"), 2)[1];
-		truncated = new StringBuilder(truncated).reverse().toString();
-		truncated = truncated.split(Pattern.quote("};"), 2)[0];
-		truncated = new StringBuilder(truncated).reverse().toString();
+		String[] lines = input.split(Pattern.quote("\n"));
 		
+		int count = 0;
+		for(String line : lines) {
+			if(line.contains("{")) {
+				if(count != 0) {
+					truncated = truncated + line + "\n";
+				}
+				count++;
+			} else if(line.contains("};")) {
+				count--;
+				if(count != 0) {
+					truncated = truncated + line + "\n";
+					//System.out.println(count + truncated);
+				}
+			} else {
+				truncated = truncated + line + "\n";
+			}
+		}
 		
 		//System.out.println(truncated);
 		
@@ -43,6 +57,9 @@ public class Unserializer {
 	
 	private static String[] subdivideSegments(String input) {
 		ArrayList<String> segments = new ArrayList<String>();
+		
+		//System.out.println("===");
+		//System.out.println(input);
 		
 		String[] inchars = input.split(Pattern.quote("\n"));
 		
@@ -53,23 +70,24 @@ public class Unserializer {
 				segment = segment + c + "\n";
 				openingBrackets++;
 			} else if (c.contains("}")) { 
+				segment = segment + c + "\n";
 				openingBrackets--;
 				if(openingBrackets == 0) {
-					segment = segment + c + "\n";
 					segments.add(segment);
 					segment = "";
 				}
-			} else if (!c.contains("{") && !c.contains("}") && openingBrackets != 0){
-				segment = segment + c + "\n";
-			} else {
+			} else if(openingBrackets == 0) {
 				segments.add(c);
+			} else {
+				segment = segment + c + "\n";
 			}
 		}
 		
 		//sort out empty lines
 		ArrayList<String> removableSegments = new ArrayList<String>();
 		for(String s : segments) {
-			if(!s.contains(":")) {
+			if(!(s.contains(";") || s.contains("{"))) {
+				//System.out.println("added " + s + "!");
 				removableSegments.add(s);
 			}
 		}
@@ -97,11 +115,15 @@ public class Unserializer {
 		
 			String[] segments = subdivideSegments(string);
 			for(String segment : segments) {
+				//System.out.println(segment);
 				config.addSubTable(unserialize(segment));
 			}
-		
+			
+			//System.out.println(config.serialize());
+			
 			return config;
 		} catch (Exception e) {
+			e.printStackTrace();
 			throw new IllegalArgumentException("Table could not be parsed: " + e.getCause().toString(), e);
 		}
 	}
